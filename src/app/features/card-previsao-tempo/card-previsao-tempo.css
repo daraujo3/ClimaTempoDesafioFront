@@ -1,0 +1,77 @@
+.weather-card {
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto 0;
+}
+
+.current-weather {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.condition {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.condition img {
+  width: 70px;
+  height: 70px;
+}
+
+.condition-text,
+.condition-description {
+  display: block;
+}
+
+.condition-text {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.condition-description {
+  margin-top: 5px;
+  color: #666;
+}
+
+.temperature {
+  font-size: 42px;
+  font-weight: 600;
+}
+
+.weather-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-item mat-icon {
+  font-size: 24px;
+}
+
+.label,
+.value {
+  display: block;
+}
+
+.label {
+  font-size: 13px;
+  color: #777;
+}
+
+.value {
+  margin-top: 3px;
+  font-size: 16px;
+  font-weight: 500;
+}

@@ -1,0 +1,18 @@
+<div class="home-container">
+  <div class="search-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Digite uma cidade</mat-label>
+      <input [(ngModel)]="searchQuery" matInput placeholder="Ex: São José do Rio Preto">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="buscarCidade()">
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
+  </div>
+  <div>
+    @if (clima$ | async; as clima) {
+    <app-card-previsao-tempo [clima]="clima"></app-card-previsao-tempo>
+    }
+  </div>
+</div>

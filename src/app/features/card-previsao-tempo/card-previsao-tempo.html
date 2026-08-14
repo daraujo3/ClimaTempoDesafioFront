@@ -1,0 +1,82 @@
+<mat-card class="weather-card">
+
+  <mat-card-header>
+
+    <button
+      mat-icon-button
+      class="favorite-button"
+      aria-label="Adicionar aos favoritos"
+      (click)="adicionarFavorito()">
+
+      <mat-icon>favorite_border</mat-icon>
+
+    </button>
+
+    <mat-card-title>
+      {{ clima().name }}
+    </mat-card-title>
+
+    <mat-card-subtitle>
+      {{ clima().region }} - {{ clima().country }}
+    </mat-card-subtitle>
+
+
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div class="current-weather">
+
+      <div class="condition">
+        <img
+          [src]="clima().condition?.icon"
+          [alt]="clima().condition?.text"
+        />
+
+        <div>
+          <span class="condition-text">
+            {{ clima().condition?.text }}
+          </span>
+        </div>
+      </div>
+
+      <div class="temperature">
+        {{ clima().temp_c }}°C
+      </div>
+
+    </div>
+
+    <div class="weather-info">
+
+      <div class="info-item">
+        <mat-icon>water_drop</mat-icon>
+
+        <div>
+          <span class="label">Umidade</span>
+          <span class="value">{{ clima().humidity }}%</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <mat-icon>arrow_upward</mat-icon>
+
+        <div>
+          <span class="label">Máxima</span>
+          <span class="value">{{ clima().forecastMaxtemp_c }}°C</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <mat-icon>arrow_downward</mat-icon>
+
+        <div>
+          <span class="label">Mínima</span>
+          <span class="value">{{ clima().forecastMintemp_c }}°C</span>
+        </div>
+      </div>
+
+    </div>
+
+  </mat-card-content>
+
+</mat-card>
