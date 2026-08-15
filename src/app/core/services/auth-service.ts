@@ -13,6 +13,11 @@ export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(!!this.getToken());
   isLoggedIn$ = this.loggedIn.asObservable();
 
+
+get isLoggedIn(): boolean {
+  return this.loggedIn.value;
+}
+
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {

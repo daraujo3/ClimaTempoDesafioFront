@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../core/services/auth-service';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registrar',
@@ -33,8 +34,7 @@ export class Registrar {
   });
 
 
-  constructor() { }
-
+  constructor(private router: Router) { }
 
   registrar() {
     if (this.form.invalid) {
@@ -50,7 +50,10 @@ export class Registrar {
 
     this.authService.registrar(email, senha).subscribe({
       next: (response) => {
-        let snackBarRef = this.snackBar.open('Registro bem-sucedido!');
+        let snackBarRef = this.snackBar.open('Registro bem-sucedido!', 'Fechar', {
+          duration: 5000,
+        });
+        this.router.navigate(['/login']);
       },
       error: (error) => {
         let snackBarRef = this.snackBar.open('Erro ao registrar! ' + (error.error?.message || ''), 'Fechar', {

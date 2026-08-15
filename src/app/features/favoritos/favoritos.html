@@ -1,16 +1,28 @@
-<div cdkDropList class="lista-favoritos" (cdkDropListDropped)="drop($any($event))">
-
+@if ((favoritos$ | async)?.cidadesFavoritas?.length) {
+<div class="favoritos-lista" cdkDropList (cdkDropListDropped)="moverFavorito($event)">
 
   @for (favorito of (favoritos$ | async)?.cidadesFavoritas; track favorito.id) {
   <div class="favorito-item" cdkDrag>
+    <div class="drag-handle" cdkDragHandle>
+      <mat-icon>drag_indicator</mat-icon>
+    </div>
 
-    <mat-icon cdkDragHandle>
-      drag_indicator
-    </mat-icon>
-
-    <app-card-previsao-tempo [favorito]="true" [clima]="favorito"></app-card-previsao-tempo>
-
+    <app-card-previsao-tempo (expandedChange)="onCardExpanded(favorito.id, $event)" [favorito]="true"
+      [clima]="favorito">
+    </app-card-previsao-tempo>
   </div>
   }
+</div>
+
+} @else {
+<div class="sem-favoritos">
+  <mat-icon>favorite_border</mat-icon>
+
+  <h2>Nenhuma cidade favorita</h2>
+
+  <p>
+    Adicione cidades aos favoritos para acompanhar a previsão do tempo.
+  </p>
 
 </div>
+}

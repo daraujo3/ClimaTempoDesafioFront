@@ -6,6 +6,11 @@ import { Favoritos } from './features/favoritos/favoritos';
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
+  },
+  {
     path: 'home',
     component: Home
   },

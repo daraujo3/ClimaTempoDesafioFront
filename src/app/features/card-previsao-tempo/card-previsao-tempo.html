@@ -12,15 +12,12 @@
         } @else {
         <mat-icon>favorite</mat-icon>
         }
-
         } @else {
-
         @if (hoverFavorito) {
         <mat-icon>favorite</mat-icon>
         } @else {
         <mat-icon>favorite_border</mat-icon>
         }
-
         }
 
       </button>
@@ -28,31 +25,24 @@
     <mat-card-title-group>
       <mat-card-title>{{ clima().name }}</mat-card-title>
       <mat-card-subtitle>{{ clima().region }} - {{ clima().country }}</mat-card-subtitle>
-      <mat-card-subtitle>{{ clima().text }}</mat-card-subtitle>
-      <img [src]="clima().icon" [alt]="clima().text" />
-      <button matIconButton [matMenuTriggerFor]="configuracao" aria-label="Configurar Card">
+
+
+      <img class="weather-icon" [src]="clima().icon" [alt]="clima().text" />
+      <!-- <button matIconButton [matMenuTriggerFor]="cor" aria-label="Configurar Card">
         <mat-icon>more_vert</mat-icon>
       </button>
-      <mat-menu #configuracao="matMenu">
-        <button mat-menu-item [matMenuTriggerFor]="cor">Cor</button>
-        <button mat-menu-item [matMenuTriggerFor]="tamanho">Tamanho</button>
-      </mat-menu>
-
-      <mat-menu #tamanho="matMenu">
-        <button mat-menu-item>Compacto</button>
-        <button mat-menu-item>Medium</button>
-        <button mat-menu-item>Full</button>
-      </mat-menu>
 
       <mat-menu #cor="matMenu">
         <button mat-menu-item>Azul</button>
         <button mat-menu-item>Vermelho</button>
         <button mat-menu-item>Verde</button>
-      </mat-menu>
+      </mat-menu> -->
 
     </mat-card-title-group>
   </mat-card-header>
   <mat-card-content>
+    <mat-divider></mat-divider>
+    <span class="value">{{ clima().text }}</span>
     <mat-divider></mat-divider>
     <div class="weather-info">
 
@@ -96,7 +86,10 @@
   </mat-card-content>
   <mat-card-footer>
     <mat-accordion>
-      <mat-expansion-panel hideToggle>
+      <mat-expansion-panel hideToggle
+      [expanded]="clima().isExpanded"
+      (opened)="onOpened()"
+      (closed)="onClosed()">
         <mat-expansion-panel-header>
           <mat-panel-title> Previsão 5 dias </mat-panel-title>
         </mat-expansion-panel-header>

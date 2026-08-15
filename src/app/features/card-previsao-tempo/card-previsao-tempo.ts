@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, EventEmitter, inject, input, Output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +10,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
+import { FavoritosLocalService } from '../../core/services/favoritos-local-service';
+import { AuthService } from '../../core/services/auth-service';
 
 @Component({
   selector: 'app-card-previsao-tempo',
@@ -29,9 +31,12 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class CardPrevisaoTempo {
   private favoritoService = inject(FavoritosService);
+  private favoritoLocalService = inject(FavoritosLocalService);
+  private authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
   favorito = input.required<boolean>();
   hoverFavorito = false;
+  isExpanded = false;
   clima = input.required<CidadeFavoritaComTempoDto>();
 
   adicionarRemoverFavorito(): void {
@@ -42,23 +47,48 @@ export class CardPrevisaoTempo {
     }
   }
 
+  @Output()
+  expandedChange = new EventEmitter<boolean>();
+
+  onOpened() {
+    this.isExpanded = true;
+    this.expandedChange.emit(this.isExpanded);
+  }
+
+  onClosed() {
+    this.isExpanded = false;
+    this.expandedChange.emit(this.isExpanded);
+  }
+
   addFavorito(): void {
-    this.favoritoService.addFavorito({
-      name: this.clima().name,
-      region: this.clima().region,
-      country: this.clima().country
-    }).subscribe({
-      next: (response) => {
-        let snackBarRef = this.snackBar.open('Favorito adicionado com sucesso!', 'Fechar', {
-          duration: 5000,
-        });
-      },
-      error: (error) => {
-        let snackBarRef = this.snackBar.open('Erro: ' + (error.error?.message || ''), 'Fechar', {
-          duration: 5000,
-        });
-      }
-    });
+
+    if (!this.authService.isLoggedIn) {
+      this.favoritoLocalService.adicionar({
+        name: this.clima().name,
+        region: this.clima().region,
+        country: this.clima().country
+      });
+      let snackBarRef = this.snackBar.open('Favorito adicionado local, entre no sistema para sincronizar dados!', 'Fechar', {
+        duration: 5000,
+      });
+    } else {
+      this.favoritoService.addFavorito({
+        name: this.clima().name,
+        region: this.clima().region,
+        country: this.clima().country
+      }).subscribe({
+        next: (response) => {
+          let snackBarRef = this.snackBar.open('Favorito adicionado com sucesso!', 'Fechar', {
+            duration: 5000,
+          });
+        },
+        error: (error) => {
+          let snackBarRef = this.snackBar.open('Erro: ' + (error.error?.message || ''), 'Fechar', {
+            duration: 5000,
+          });
+        }
+      });
+    }
   }
 
   removeFavorito(): void {

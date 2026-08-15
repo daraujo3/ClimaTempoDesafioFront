@@ -9,6 +9,7 @@ import { CardPrevisaoTempo } from '../card-previsao-tempo/card-previsao-tempo';
 import { FormsModule } from '@angular/forms';
 import { FavoritosService } from '../../core/services/favoritos-service';
 import { take } from 'rxjs/internal/operators/take';
+import { CidadeFavorita, CidadeFavoritaComTempoDto } from '../shared/models/CidadeFavorita';
 
 @Component({
   selector: 'app-favoritos',
@@ -39,19 +40,95 @@ export class Favoritos implements OnInit {
     this.favoritosService.getFavoritos();
   }
 
-  drop(event: CdkDragDrop<string[]>): void {
-    this.favoritos$.pipe(take(1)).subscribe(favoritos => {
+  onCardExpanded(id: number, expanded: boolean) {
+  console.log(`Card ${id} expanded: ${expanded}`);
 
+    this.favoritos$.pipe(take(1)).subscribe(favoritos => {
       if (!favoritos) {
         return;
       }
 
+      const cidadesAtualizadas = favoritos.cidadesFavoritas.map(cidade => {
+        if (cidade.id === id) {
+          return { ...cidade, isExpanded: expanded };
+        }
+        return cidade;
+      });
+
+      const cidadesParaSalvar: CidadeFavorita[] =
+        cidadesAtualizadas.map(cidade =>
+          this.converterParaCidadeFavorita(cidade)
+        );
+
+      this.atualizarFavoritos(cidadesParaSalvar);
+    });
+  }
+
+  moverFavorito(event: CdkDragDrop<CidadeFavoritaComTempoDto[]>) {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    this.favoritos$.pipe(take(1)).subscribe(favoritos => {
+      if (!favoritos) {
+        return;
+      }
+
+      const cidades = [...favoritos.cidadesFavoritas];
+
       moveItemInArray(
-        favoritos.cidadesFavoritas,
+        cidades,
         event.previousIndex,
         event.currentIndex
       );
 
+      const cidadesAtualizadas = cidades.map((cidade, index) => ({
+        ...cidade,
+        posicao: index + 1
+      }));
+
+      // Atualiza a tela
+      this.favoritosService.atualizarOrdem(cidadesAtualizadas);
+
+      // Converte para o objeto que a API espera
+      const cidadesParaSalvar: CidadeFavorita[] =
+        cidadesAtualizadas.map(cidade =>
+          this.converterParaCidadeFavorita(cidade)
+        );
+
+      this.atualizarFavoritos(cidadesParaSalvar);
     });
+  }
+
+  private atualizarFavoritos(cidades: CidadeFavorita[]) {
+    // Salva
+    this.favoritosService
+      .atualizarFavoritos(cidades)
+      .subscribe({
+        next: () => {
+          console.log('Ordem salva');
+        },
+        error: erro => {
+          console.error('Erro ao salvar ordem', erro);
+          this.favoritosService.getFavoritos();
+        },
+        complete: () => {
+          this.favoritosService.getFavoritos();
+        }
+      });
+  }
+
+
+  private converterParaCidadeFavorita(
+    cidade: CidadeFavoritaComTempoDto
+  ): CidadeFavorita {
+    return {
+      id: cidade.id,
+      name: cidade.name,
+      region: cidade.region,
+      country: cidade.country,
+      posicao: cidade.posicao,
+      isExpanded: cidade.isExpanded
+    };
   }
 }
