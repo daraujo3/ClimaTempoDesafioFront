@@ -2,24 +2,23 @@
   flex: 1 1 auto;
 }
 
-.container {
-  padding: 24px;
+main {
+  padding: 20px;
 }
 
-mat-toolbar {
-  display: flex;
-  align-items: center;
-}
+@media (max-width: 600px) {
+  mat-toolbar {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    padding: 8px;
+  }
 
-mat-toolbar span:first-child {
-  font-size: 20px;
-  font-weight: 500;
-}
+  .spacer {
+    display: none;
+  }
 
-button {
-  margin-left: 8px;
-}
-
-button mat-icon {
-  margin-right: 4px;
+  mat-toolbar a {
+    flex: 1;
+  }
 }

@@ -1,5 +1,6 @@
 .cadastro-container {
-  min-height: calc(100vh - 64px);
+  min-height: auto;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -5,13 +5,24 @@ import { MatButtonModule } from '@angular/material/button';
 import { FavoritosService } from '../../core/services/favoritos-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CidadeFavoritaComTempoDto } from '../shared/models/CidadeFavorita';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { DatePipe, DecimalPipe } from '@angular/common';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-card-previsao-tempo',
   imports: [
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule,
+    MatListModule,
+    MatExpansionModule,
+    DatePipe,
+    DecimalPipe,
+    MatMenuModule
   ],
   templateUrl: './card-previsao-tempo.html',
   styleUrl: './card-previsao-tempo.css',

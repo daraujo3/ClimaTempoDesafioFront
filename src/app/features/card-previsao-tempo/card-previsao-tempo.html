@@ -1,63 +1,68 @@
-<mat-card class="weather-card">
-
+<mat-card class="card-previsao" appearance="outlined">
   <mat-card-header>
+    <div mat-card-avatar>
+      <button mat-icon-button class="favorite-button" (mouseenter)="hoverFavorito = true"
+        (mouseleave)="hoverFavorito = false" (click)="adicionarRemoverFavorito()"
+        [attr.aria-label]="favorito() ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
 
-    <button mat-icon-button class="favorite-button" (mouseenter)="hoverFavorito = true"
-      (mouseleave)="hoverFavorito = false" (click)="adicionarRemoverFavorito()"
-      [attr.aria-label]="favorito() ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
+        @if (favorito()) {
 
-      @if (favorito()) {
+        @if (hoverFavorito) {
+        <mat-icon>heart_broken</mat-icon>
+        } @else {
+        <mat-icon>favorite</mat-icon>
+        }
 
-      @if (hoverFavorito) {
-      <mat-icon>heart_broken</mat-icon>
-      } @else {
-      <mat-icon>favorite</mat-icon>
-      }
+        } @else {
 
-      } @else {
+        @if (hoverFavorito) {
+        <mat-icon>favorite</mat-icon>
+        } @else {
+        <mat-icon>favorite_border</mat-icon>
+        }
 
-      @if (hoverFavorito) {
-      <mat-icon>favorite</mat-icon>
-      } @else {
-      <mat-icon>favorite_border</mat-icon>
-      }
+        }
 
-      }
+      </button>
+    </div>
+    <mat-card-title-group>
+      <mat-card-title>{{ clima().name }}</mat-card-title>
+      <mat-card-subtitle>{{ clima().region }} - {{ clima().country }}</mat-card-subtitle>
+      <mat-card-subtitle>{{ clima().text }}</mat-card-subtitle>
+      <img [src]="clima().icon" [alt]="clima().text" />
+      <button matIconButton [matMenuTriggerFor]="configuracao" aria-label="Configurar Card">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #configuracao="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="cor">Cor</button>
+        <button mat-menu-item [matMenuTriggerFor]="tamanho">Tamanho</button>
+      </mat-menu>
 
-    </button>
+      <mat-menu #tamanho="matMenu">
+        <button mat-menu-item>Compacto</button>
+        <button mat-menu-item>Medium</button>
+        <button mat-menu-item>Full</button>
+      </mat-menu>
 
-    <mat-card-title>
-      {{ clima().name }}
-    </mat-card-title>
+      <mat-menu #cor="matMenu">
+        <button mat-menu-item>Azul</button>
+        <button mat-menu-item>Vermelho</button>
+        <button mat-menu-item>Verde</button>
+      </mat-menu>
 
-    <mat-card-subtitle>
-      {{ clima().region }} - {{ clima().country }}
-    </mat-card-subtitle>
-
-
+    </mat-card-title-group>
   </mat-card-header>
-
   <mat-card-content>
+    <mat-divider></mat-divider>
+    <div class="weather-info">
 
-    <div class="current-weather">
-
-      <div class="condition">
-        <img [src]="clima().icon" [alt]="clima().text" />
-
+      <div class="info-item">
+        <mat-icon>device_thermostat</mat-icon>
         <div>
-          <span class="condition-text">
-            {{ clima().text }}
-          </span>
+          <span class="label">Temp.</span>
+          <span class="value">{{ clima().temp_c | number:'1.2-2'}}°C</span>
         </div>
       </div>
-
-      <div class="temperature">
-        {{ clima().temp_c }}°C
-      </div>
-
-    </div>
-
-    <div class="weather-info">
 
       <div class="info-item">
         <mat-icon>water_drop</mat-icon>
@@ -72,8 +77,8 @@
         <mat-icon>arrow_upward</mat-icon>
 
         <div>
-          <span class="label">Máxima</span>
-          <span class="value">{{ clima().forecastMaxtemp_c }}°C</span>
+          <span class="label">Max.</span>
+          <span class="value">{{ clima().forecastMaxtemp_c | number:'1.1-1'}}°C</span>
         </div>
       </div>
 
@@ -81,13 +86,52 @@
         <mat-icon>arrow_downward</mat-icon>
 
         <div>
-          <span class="label">Mínima</span>
-          <span class="value">{{ clima().forecastMintemp_c }}°C</span>
+          <span class="label">Min.</span>
+          <span class="value">{{ clima().forecastMintemp_c | number:'1.1-1'}}°C</span>
         </div>
       </div>
 
     </div>
-
+    <mat-divider></mat-divider>
   </mat-card-content>
+  <mat-card-footer>
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Previsão 5 dias </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-list>
+          @for (day of clima().previsao; track day.data) {
+          <mat-list-item>
+            <div class="weather-info">
+              <div class="info-item">
+                <img [src]="day.icon" [alt]="day.text" />
+              </div>
+              <div class="info-item">
+                <mat-icon>calendar_today</mat-icon>
+                <div>
+                  <span class="value">{{ day.data | date:'dd/MM'}}</span>
+                </div>
+              </div>
 
+              <div class="info-item">
+                <mat-icon>arrow_upward</mat-icon>
+                <div>
+                  <span class="value">{{ day.forecastMaxtemp_c | number:'1.1-1' }}°C</span>
+                </div>
+              </div>
+
+              <div class="info-item">
+                <mat-icon>arrow_downward</mat-icon>
+                <div>
+                  <span class="value">{{ day.forecastMintemp_c | number:'1.1-1'}}°C</span>
+                </div>
+              </div>
+            </div>
+          </mat-list-item>
+          }
+        </mat-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-footer>
 </mat-card>

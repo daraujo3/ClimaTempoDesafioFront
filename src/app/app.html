@@ -1,29 +1,20 @@
 <mat-toolbar color="primary">
+
   <span>Previsão do Tempo</span>
+
   <span class="spacer"></span>
-  <button mat-button routerLink="/home">
-    <mat-icon>home</mat-icon>
-    Home
-  </button>
+
+  <a mat-button routerLink="/home">Home</a>
+
+
   @if (isLoggedIn$ | async; as bool) {
-  <button mat-button routerLink="/favoritos">
-    <mat-icon>favorite</mat-icon>
-    Favoritos
-  </button>
-  <button mat-button (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    Logout
-  </button>
+  <a mat-button routerLink="/favoritos">Favoritos</a>
+  <a mat-button (click)="logout()">Logout</a>
   } @else {
-  <button mat-button routerLink="/login">
-    <mat-icon>login</mat-icon>
-    Login
-  </button>
-  <button mat-button routerLink="/cadastro">
-    <mat-icon>person_add</mat-icon>
-    Cadastro
-  </button>
+  <a mat-button routerLink="/cadastro">Cadastro</a>
+  <a mat-button routerLink="/login">Login</a>
   }
+
 </mat-toolbar>
 
 <main class="container">
