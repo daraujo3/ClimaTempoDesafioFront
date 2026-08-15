@@ -1,1 +1,16 @@
-<p>favoritos works!</p>
+<div cdkDropList class="lista-favoritos" (cdkDropListDropped)="drop($any($event))">
+
+
+  @for (favorito of (favoritos$ | async)?.cidadesFavoritas; track favorito.id) {
+  <div class="favorito-item" cdkDrag>
+
+    <mat-icon cdkDragHandle>
+      drag_indicator
+    </mat-icon>
+
+    <app-card-previsao-tempo [favorito]="true" [clima]="favorito"></app-card-previsao-tempo>
+
+  </div>
+  }
+
+</div>

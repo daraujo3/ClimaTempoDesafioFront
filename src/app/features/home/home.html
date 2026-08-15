@@ -12,7 +12,7 @@
   </div>
   <div>
     @if (clima$ | async; as clima) {
-    <app-card-previsao-tempo [clima]="clima"></app-card-previsao-tempo>
+    <app-card-previsao-tempo [favorito]="false" [clima]="clima"></app-card-previsao-tempo>
     }
   </div>
 </div>

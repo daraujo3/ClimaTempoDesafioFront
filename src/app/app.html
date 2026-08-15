@@ -5,16 +5,7 @@
     <mat-icon>home</mat-icon>
     Home
   </button>
-  @if (!isLoggedIn) {
-  <button mat-button routerLink="/login">
-    <mat-icon>login</mat-icon>
-    Login
-  </button>
-  <button mat-button routerLink="/cadastro">
-    <mat-icon>person_add</mat-icon>
-    Cadastro
-  </button>
-  } @else {
+  @if (isLoggedIn$ | async; as bool) {
   <button mat-button routerLink="/favoritos">
     <mat-icon>favorite</mat-icon>
     Favoritos
@@ -22,6 +13,15 @@
   <button mat-button (click)="logout()">
     <mat-icon>logout</mat-icon>
     Logout
+  </button>
+  } @else {
+  <button mat-button routerLink="/login">
+    <mat-icon>login</mat-icon>
+    Login
+  </button>
+  <button mat-button routerLink="/cadastro">
+    <mat-icon>person_add</mat-icon>
+    Cadastro
   </button>
   }
 </mat-toolbar>

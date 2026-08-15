@@ -1,70 +1,57 @@
-import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, inject, OnInit } from '@angular/core';
+import { CdkDrag, CdkDragDrop, moveItemInArray, CdkDropList } from '@angular/cdk/drag-drop';
+import { AsyncPipe } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { CardPrevisaoTempo } from '../card-previsao-tempo/card-previsao-tempo';
+import { FormsModule } from '@angular/forms';
+import { FavoritosService } from '../../core/services/favoritos-service';
+import { take } from 'rxjs/internal/operators/take';
 
 @Component({
   selector: 'app-favoritos',
-  imports: [],
+  imports: [FormsModule,
+    CdkDrag,
+    CdkDropList,
+    CardPrevisaoTempo,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    AsyncPipe],
   templateUrl: './favoritos.html',
   styleUrl: './favoritos.css',
 })
 export class Favoritos implements OnInit {
+  private favoritosService = inject(FavoritosService);
 
-tamanhoCard: 'pequeno' | 'medio' | 'grande' = 'medio';
-  corDestaque: string = '#0d6efd';
-  private deleteTimer: any;
-
-  favoritos: CidadeFavorita[] = [];
+  get favoritos$() {
+    return this.favoritosService.favoritos$;
+  }
 
   ngOnInit(): void {
-    this.carregarFavoritosMock();
+    this.carregarFavoritos();
   }
 
-  // ==========================================
-  // LÓGICA DE DRAG AND DROP (POSIÇÃO MANUAL)
-  // ==========================================
-
-  onDrop(event: CdkDragDrop<CidadeFavorita[]>) {
-    // moveItemInArray é uma função nativa do Angular CDK que reordena o array visualmente e logicamente
-    moveItemInArray(this.favoritos, event.previousIndex, event.currentIndex);
-
-    // Após alterar no array local, chamamos a função para salvar no banco/localstorage
-    this.salvarPosicoes();
+  private carregarFavoritos(): void {
+    this.favoritosService.getFavoritos();
   }
 
-  private salvarPosicoes(): void {
-    // Aqui você enviaria a nova ordem para a sua API ou salvaria no LocalStorage.
-    // Exemplo de como preparar os dados: pegamos apenas os IDs na nova ordem.
-    const ordemIds = this.favoritos.map(fav => fav.id);
+  drop(event: CdkDragDrop<string[]>): void {
+    this.favoritos$.pipe(take(1)).subscribe(favoritos => {
 
-    console.log('Nova ordem salva:', ordemIds);
-    // localStorage.setItem('ordemFavoritos', JSON.stringify(ordemIds));
-    // this.apiService.salvarOrdem(ordemIds).subscribe();
+      if (!favoritos) {
+        return;
+      }
+
+      moveItemInArray(
+        favoritos.cidadesFavoritas,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+    });
   }
-
-  // ==========================================
-  // LÓGICA DE SEGURAR PARA DELETAR MANTIDA
-  // ==========================================
-  startDelete(id: number): void {
-    this.deleteTimer = setTimeout(() => {
-      this.removerFavorito(id);
-    }, 1000);
-  }
-
-  cancelDelete(): void {
-    if (this.deleteTimer) {
-      clearTimeout(this.deleteTimer);
-      this.deleteTimer = null;
-    }
-  }
-
-  private removerFavorito(id: number): void {
-    this.favoritos = this.favoritos.filter(fav => fav.id !== id);
-    this.deleteTimer = null;
-    this.salvarPosicoes(); // Salva a nova ordem após a exclusão
-  }
-
-  private carregarFavoritosMock(): void {
-    // Carregamento mantido...
-  }
-
 }

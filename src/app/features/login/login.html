@@ -11,12 +11,13 @@
 
     <mat-card-content>
 
-      <form>
+      <form [formGroup]="form" (ngSubmit)="logar()">
 
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
           <input
             matInput
+            formControlName="email"
             type="email"
             placeholder="seu@email.com">
         </mat-form-field>
@@ -25,6 +26,7 @@
           <mat-label>Senha</mat-label>
           <input
             matInput
+            formControlName="senha"
             type="password"
             placeholder="Digite sua senha">
         </mat-form-field>

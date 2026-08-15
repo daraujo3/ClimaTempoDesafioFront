@@ -11,7 +11,6 @@ export class AuthService {
   private baseUrl = environment.apiUrl;
 
   private loggedIn = new BehaviorSubject<boolean>(!!this.getToken());
-
   isLoggedIn$ = this.loggedIn.asObservable();
 
   constructor(private http: HttpClient) { }
@@ -29,6 +28,12 @@ export class AuthService {
         }
       })
     );
+  }
+
+  registrar(email: string, password: string) {
+    const payload = { Email: email, Password: password };
+
+    return this.http.post<any>(`${this.baseUrl}/Autenticacao/registrar`, payload);
   }
 
   logout(): void {

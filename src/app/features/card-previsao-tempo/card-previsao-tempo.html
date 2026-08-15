@@ -2,13 +2,27 @@
 
   <mat-card-header>
 
-    <button
-      mat-icon-button
-      class="favorite-button"
-      aria-label="Adicionar aos favoritos"
-      (click)="adicionarFavorito()">
+    <button mat-icon-button class="favorite-button" (mouseenter)="hoverFavorito = true"
+      (mouseleave)="hoverFavorito = false" (click)="adicionarRemoverFavorito()"
+      [attr.aria-label]="favorito() ? 'Remover dos favoritos' : 'Adicionar aos favoritos'">
 
+      @if (favorito()) {
+
+      @if (hoverFavorito) {
+      <mat-icon>heart_broken</mat-icon>
+      } @else {
+      <mat-icon>favorite</mat-icon>
+      }
+
+      } @else {
+
+      @if (hoverFavorito) {
+      <mat-icon>favorite</mat-icon>
+      } @else {
       <mat-icon>favorite_border</mat-icon>
+      }
+
+      }
 
     </button>
 
@@ -28,14 +42,11 @@
     <div class="current-weather">
 
       <div class="condition">
-        <img
-          [src]="clima().condition?.icon"
-          [alt]="clima().condition?.text"
-        />
+        <img [src]="clima().icon" [alt]="clima().text" />
 
         <div>
           <span class="condition-text">
-            {{ clima().condition?.text }}
+            {{ clima().text }}
           </span>
         </div>
       </div>

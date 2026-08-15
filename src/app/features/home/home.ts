@@ -23,8 +23,6 @@ import { AsyncPipe } from '@angular/common';
 })
 export class Home {
   searchQuery = '';
-  loading = false;
-  errorMessage = '';
 
   constructor(
     private climaTempoService: ClimaTempoService
